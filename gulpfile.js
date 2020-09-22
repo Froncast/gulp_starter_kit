@@ -9,20 +9,23 @@ const path = {
     css: `${projectFolder}/css/`,
     js: `${projectFolder}/js/`,
     img: `${projectFolder}/img/`,
-    fonts: `${projectFolder}/fonts/`,
+		fonts: `${projectFolder}/fonts/`,
+		icons: `${projectFolder}/`
   },
   src: {
     html: [`${srcFolder}/*.html`, `!${srcFolder}/_*.html`],
     css: `${srcFolder}/scss/style.scss`,
     js: `${srcFolder}/js/script.js`,
     img: `${srcFolder}/img/**/*.{jpg,png,svg,gif,ico,webp}`,
-    fonts: `${srcFolder}/fonts/**/*.ttf`,
+		fonts: `${srcFolder}/fonts/**/*.ttf`,
+		icons: `${srcFolder}/iconsprite/*.svg`
   },
   watch: {
     html: `${srcFolder}/**/*.html`,
     css: `${srcFolder}/scss/**/*.scss`,
     js: `${srcFolder}/js/**/*.js`,
-    img: `${srcFolder}/img/**/*.{jpg,png,svg,gif,ico,webp}`
+		img: `${srcFolder}/img/**/*.{jpg,png,svg,gif,ico,webp}`,
+		icons: `${srcFolder}/iconsprite/*.svg`
   },
   clean: `./${projectFolder}/`
 }
@@ -139,18 +142,19 @@ gulp.task('otf2ttf', function () {
     .pipe(dest(`${srcFolder}/fonts/`))
 })
 
-gulp.task('svgSprite', function () {
-  return gulp.src([`${srcFolder}/iconsprite/*.svg`])
-    .pipe(svgSprite({
-      mode: {
-        stack: {
-          sprite: "../icons/icons.svg",
-          // example: true
-        }
-      }
-    }))
-    .pipe(dest(path.build.img))
-})
+function svgsprites() {
+	return gulp.src([`${srcFolder}/iconsprite/*.svg`])
+		.pipe(svgSprite({
+			mode: {
+				stack: {
+					sprite: '../icons/icons.svg',
+					example: true
+				}
+			}
+		}))
+		.pipe(dest(path.build.icons))
+    .pipe(browserSync.stream())
+}
 
 function clean(params) {
   return del(path.clean)
@@ -184,11 +188,13 @@ function watcher(params) {
   gulp.watch([path.watch.css], css)
   gulp.watch([path.watch.js], js)
   gulp.watch([path.watch.img], images)
+  gulp.watch([path.watch.icons], svgsprites)
 }
 
-const build = gulp.series(clean, gulp.parallel(js, css, html, images, fonts), fontsStyle)
+const build = gulp.series(clean, gulp.parallel(js, css, html, images, fonts, svgsprites), fontsStyle)
 const watch = gulp.parallel(build, watcher, brwsrSync)
 
+exports.svgsprites = svgsprites
 exports.fontsStyle = fontsStyle
 exports.fonts = fonts
 exports.images = images
