@@ -12,12 +12,6 @@
 	"keywords": [
 		"gulp"
 	],
-	"husky": {
-		"hooks": {
-			"pre-commit": "YOUR_COMMAND_HERE",
-			"pre-push": "YOUR_COMMAND_HERE"
-		}
-	},
 	"author": "Oleg Tretyakov <ichimaru859@gmail.com> (https://vk.com/xx_froncast_xx)",
 	"license": "ISC",
 	"devDependencies": {
@@ -51,11 +45,5 @@
 		"lint-staged": "^10.4.0",
 		"prettier": "^2.1.2",
 		"webp-converter": "^2.2.3"
-	},
-	"lint-staged": {
-		"*.(js|jsx)": [
-			"npm run lint:write",
-			"git add"
-		]
 	}
 }
