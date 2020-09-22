@@ -44,6 +44,7 @@ const uglify = require('gulp-uglify-es').default
 const imagemin = require('gulp-imagemin')
 const webp = require('gulp-webp')
 const webpHtml = require('gulp-webp-html')
+const webpcss = require("gulp-webpcss")
 const svgSprite = require('gulp-svg-sprite')
 const ttf2woff = require('gulp-ttf2woff')
 const ttf2woff2 = require('gulp-ttf2woff2')
@@ -76,7 +77,11 @@ function css() {
     .pipe(autoprefixer({
       overrideBrowserslist: ["last 5 versions"],
       cascade: true
-    }))
+		}))
+		.pipe(webpcss({
+			webpClass: 'webp',
+			noWebpClass: '.no-webp'
+		}))
     .pipe(dest(path.build.css))
     .pipe(cleanCss())
     .pipe(rename({
